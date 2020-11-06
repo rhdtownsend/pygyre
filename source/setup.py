@@ -4,8 +4,9 @@ import re
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
-    
-version = subprocess.check_output(["mycmd", "describe --tags --abbrev=0"])
+
+version_str = subprocess.check_output(["git", "describe", "--tags", "--abbrev=0"], text=True)
+version = re.sub(r'^v', r'', version_str)
 
 setuptools.setup(
     name="pygyre",
