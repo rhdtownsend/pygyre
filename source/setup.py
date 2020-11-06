@@ -1,11 +1,15 @@
 import setuptools
+import subprocess
+import re
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
+    
+version = subprocess.check_output(["mycmd", "describe --tags --abbrev=0"])
 
 setuptools.setup(
     name="pygyre",
-    version="1.0.0",
+    version=version,
     author="Rich Townsend",
     author_email="townsend@astro.wisc.edu",
     description="Python support for the GYRE stellar oscillation code",

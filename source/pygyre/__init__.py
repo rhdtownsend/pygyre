@@ -65,28 +65,18 @@ def read_output(filename, filetype='auto'):
 
 def _read_output_hdf(filename):
 
-    # Read data from the file
-
-    with h5.File(filename, 'r') as file:
-
-        meta = dict(zip(file.attrs.keys(),file.attrs.values()))
-
-        complex_dtype = np.dtype([('re', '<f8'), ('im', '<f8')])
-
-        cols = {}
-    
-        for key in file.keys():
-
-            vals = file[key][...]
-
-            if vals.dtype == complex_dtype:
-                vals = vals['re'] + 1j*vals['im']
-
-            cols[key] = vals
-
     # Create the table
 
-    tab = tb.Table(cols, meta=meta)
+    tab = _read_generic_hdf(filename)
+
+    # Convert complex columns
+
+    complex_dtype = np.dtype([('re', '<f8'), ('im', '<f8')])
+
+    for colname in tab.colnames:
+
+        if tab[colname].dtype == complex_dtype:
+            tab[colname] = tab[colname]['re'] + 1j*tab[colname]['im']
 
     return tab
 
@@ -108,7 +98,7 @@ def _read_output_txt(filename):
 
             colname = mo.group(1)
 
-            colname_re = colname
+            colname_re = 'Re({:s})'.format(colname)
             colname_im = 'Im({:s})'.format(colname)
             
             tab[colname] = tab[colname_re] + 1j*tab[colname_im]
@@ -173,20 +163,9 @@ def read_model(filename, filetype='auto'):
 
 def _read_model_gsm(filename):
 
-    # Read data from the file
-
-    with h5.File(filename, 'r') as file:
-
-        meta = dict(zip(file.attrs.keys(),file.attrs.values()))
-
-        cols = {}
-    
-        for key in file.keys():
-            cols[key] = file[key][...]
-
     # Create the table
 
-    tab = tb.Table(cols, meta=meta)
+    tab = _read_model_gsm(filename)
 
     return tab
 
@@ -359,6 +338,27 @@ def read_poly(filename):
 
 ##
 
+def _read_generic_hdf(filename):
+
+    # Read data from the file
+
+    with h5.File(filename, 'r') as file:
+
+        meta = dict(zip(file.attrs.keys(),file.attrs.values()))
+
+        cols = {}
+    
+        for key in file.keys():
+            cols[key] = file[key][...]
+
+    # Create the table
+
+    tab = tb.Table(cols, meta=meta)
+
+    return tab
+
+##
+
 def _read_generic_txt(filename):
 
     # Read data from the file
@@ -396,7 +396,7 @@ def _read_generic_txt(filename):
 
 ##
 
-def _interpret (s):
+def _interpret(s):
 
     try:
 
@@ -414,5 +414,3 @@ def _interpret (s):
         except ValueError:
 
             return s
-
-##

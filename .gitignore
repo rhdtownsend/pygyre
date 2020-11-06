@@ -1,3 +1,5 @@
 # .gitignore file for PYGYRE
 
 *~
+.DS_Store
+__pycache__
