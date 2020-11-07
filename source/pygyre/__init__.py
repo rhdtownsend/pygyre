@@ -69,7 +69,7 @@ def _read_output_hdf(filename):
 
     tab = _read_generic_hdf(filename)
 
-    # Convert complex columns
+    # Convert complex columns and attributes
 
     complex_dtype = np.dtype([('re', '<f8'), ('im', '<f8')])
 
@@ -77,6 +77,11 @@ def _read_output_hdf(filename):
 
         if tab[colname].dtype == complex_dtype:
             tab[colname] = tab[colname]['re'] + 1j*tab[colname]['im']
+
+    for atrname in tab.meta:
+
+        if tab.meta[atrname].dtype == complex_dtype:
+            tab.meta[atrname] = tab.meta[atrname]['re'] + 1j*tab.meta[atrname]['im']
 
     return tab
 
