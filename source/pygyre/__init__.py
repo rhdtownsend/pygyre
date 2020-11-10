@@ -210,7 +210,7 @@ def _read_model_poly(filename):
 
     with np.nditer([z, theta, dtheta, n_poly, t, mu, None, None, None, None]) as it:
 
-        for z_, theta_, dtheta_, n_poly_, t_, mu_, V_2, As, U, c_1 in it:
+        for z_, theta_, dtheta_, n_poly_, t_, mu_, V_2, As, U, c_1, in it:
 
             if z_ != 0:
                 if theta_ != 0:
@@ -234,9 +234,19 @@ def _read_model_poly(filename):
 
     # Add in physical data
 
+    with np.nditer([z, theta, dtheta, n_poly, t, mu, None]) as it:
+
+        for z_, theta_, dtheta_, n_poly_, t_, mu_, P in it:
+
+            if z_ != 0:
+                P[...] = -(n_poly[0]+1.)/(n_poly_+1.)*t_*mu_*theta_**(n_poly_+1.)/(z_**2*dtheta_)
+            else:
+                P[...] = 1.
+
+        tab['P/P_c'] = it.operands[-1]
+
     tab['rho/rho_c'] = t*theta**n_poly
-    tab['P/P_c'] = 1/B*(n_poly[0]+1.)/(n_poly+1.)*t**(1.-1./n_poly)*tab['rho/rho_c']**(1.+1./n_poly)
-    tab['m/M'] = mu/mu_s
+    tab['M_r/M'] = mu/mu_s
 
     return tab
 
