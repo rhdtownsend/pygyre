@@ -190,7 +190,7 @@ def _read_model_poly(filename):
 
     # Create the table
 
-    tab = read_poly(filename)
+    tab = _read_poly(filename)
 
     # Add in structure coefficients
 
@@ -234,25 +234,15 @@ def _read_model_poly(filename):
 
     # Add in physical data
 
-    with np.nditer([z, theta, dtheta, n_poly, t, mu, None]) as it:
-
-        for z_, theta_, dtheta_, n_poly_, t_, mu_, P in it:
-
-            if z_ != 0:
-                P[...] = -(n_poly[0]+1.)/(n_poly_+1.)*t_*mu_*theta_**(n_poly_+1.)/(z_**2*dtheta_)
-            else:
-                P[...] = 1.
-
-        tab['P/P_c'] = it.operands[-1]
-
-    tab['rho/rho_c'] = t*theta**n_poly
+    tab['rho/rho_0'] = t*theta**n_poly
+    tab['P/P_0'] = (n_poly[0]+1.)/(n_poly+1.)*t**2/B*theta**(n_poly+1.)
     tab['M_r/M'] = mu/mu_s
 
     return tab
 
 ##
 
-def read_poly(filename):
+def _read_poly(filename):
 
     # Read data from the file
 
