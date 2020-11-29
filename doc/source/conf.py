@@ -23,8 +23,8 @@ import sphinx_rtd_theme
 
 project = 'PyGYRE'
 author = 'Rich Townsend & The PyGYRE Team'
-version = "1.0.0"
-release = "1.0.0"
+version = "v1.0.4"
+release = "v1.0.4"
 branch = "main"
 copyright = '2020, Rich Townsend & The PyGYRE Team'
 
@@ -41,6 +41,8 @@ extensions = [
     'sphinx_rtd_theme',
     'sphinx.ext.mathjax',
     'sphinx.ext.extlinks',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.napoleon',
     'sphinx-prompt',
     'sphinx_substitution_extensions',
 ]
@@ -95,11 +97,6 @@ extlinks = {
     'repo': ('https://github.com/rhdtownsend/pygyre/blob/{:s}/%s'.format(branch), '')
 }
 
-# Set substitutions for sphinx_substitution_extensions 
-substitutions = [
-    ('|release|', release)
-]
-
 # Set site-wide targets
 targets = {
     'github-tarball': 'https:///github.com/rhdtownsend/pygyre/archive/{0:s}.tar.gz'.format(release),
@@ -107,5 +104,28 @@ targets = {
 
 rst_prolog = '\n'.join(['.. _{:s}: {:s}'.format(x, targets[x]) for x in targets])
 
+# Add substitutions for sphinx_substitution_extensions
+
+rep_exts = {"release": release,
+            "author": author}
+
+for rep_ext_key, rep_ext_val in rep_exts.items():
+    rst_prolog += "\n.. |{:s}| replace:: {:s}".format(rep_ext_key, rep_ext_val)
+
 # Enable email obfuscation
 email_automode = True
+
+# Intersphinx mappig
+intersphinx_mapping = {
+    'gyre': ('https://gyre.readthedocs.io/en/latest/', None),
+    'astropy': ('https://docs.astropy.org/en/stable/', None)
+    }
+
+# Remove module docstring from autodoc
+def remove_module_docstring(app, what, name, obj, options, lines):
+    if what == "module" and name == "pygyre":
+        del lines[:]
+
+def setup(app):
+    app.connect("autodoc-process-docstring", remove_module_docstring)
+    

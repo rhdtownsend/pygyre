@@ -1,73 +1,74 @@
-# Module  : pygyre top level module
-# Purpose : Python support for GYRE
-#
-# Copyright 2020 Rich Townsend & The GYRE Team
-#
-# This file is part of PYGYRE. PYGYRE is free software: you can
-# redistribute it and/or modify it under the terms of the GNU General
-# Public License as published by the Free Software Foundation, version 3.
-#
-# PYGYRE is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
-# License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# -*- coding: utf-8 -*-
+
+"""Python support for GYRE.
+
+PyGYRE provides a number of routines for reading output files produced
+by the GYRE stellar oscillation code, and other related files such as
+stellar models.
+
+"""
 
 import numpy as np
 import h5py as h5
 import re
 import astropy.table as tb
 
-def read_output(filename, filetype='auto'):
+def read_output(name, format='auto'):
 
     """
-    Read GYRE output data from a file
-    
-    Parameters
-    -----------
-    
-    filename : string
-        Input file name
+    Read GYRE output data from a file.
 
-    filetype : string (default 'auto')
-        Input file type (one of 'HDF', 'TXT' or 'auto')
-    
+    Parameters
+    ----------
+    file : str
+        The name of the file.
+    format : str, optional
+        The format of the file.
+
     Returns
     -------
+    astropy.table.Table
+        Data read from the file. Array values are stored in table
+        columns, and scalar values in the table `meta` attribute.
+    
+    Raises
+    ------
+    ValueError
+        If `format` does not correspond to a recognized format.
 
-    table: astropy.table.Table
-        Table containing file data
+    Notes
+    -----
+    Valid formats are 'HDF', 'TXT' or 'auto' (autodetect).
+
     """
 
-    # If necessary, determine the filetype
+    # If necessary, determine the format
 
-    if filetype == 'auto':
+    if format == 'auto':
 
-        if h5.is_hdf5(filename):
-            filetype = 'HDF'
+        if h5.is_hdf5(name):
+            format = 'HDF'
         else:
-            filetype = 'TXT'
+            format = 'TXT'
 
     # Create the table
 
-    if filetype == 'HDF':
-        tab = _read_output_hdf(filename)
-    elif filetype == 'TXT':
-        tab = _read_output_txt(filename)
+    if format == 'HDF':
+        tab = _read_output_hdf(name)
+    elif format == 'TXT':
+        tab = _read_output_txt(name)
     else:
-        raise Exception("Invalid filetype '{:s}'".format(filetype))
+        raise ValueError("Invalid format '{:s}'".format(format))
 
     return tab
 
 ##
 
-def _read_output_hdf(filename):
+def _read_output_hdf(name):
 
     # Create the table
 
-    tab = _read_generic_hdf(filename)
+    tab = _read_generic_hdf(name)
 
     # Convert complex columns and attributes
 
@@ -87,11 +88,11 @@ def _read_output_hdf(filename):
 
 ##
 
-def _read_output_txt(filename):
+def _read_output_txt(name):
 
     # Create the table
 
-    tab = _read_generic_txt(filename)
+    tab = _read_generic_txt(name)
 
      # Merge real/imag columns
 
@@ -114,83 +115,91 @@ def _read_output_txt(filename):
 
 ##
 
-def read_model(filename, filetype='auto'):
+def read_model(name, format='auto'):
 
     """
-    Read stellar model data from a file
-    
-    Parameters
-    -----------
-    
-    filename : string
-        Input file name
+    Read stellar model data from a file.
 
-    filetype : string (default 'auto')
-        Input file type (one of 'MESA', 'GSM', 'POLY')
-    
+    Parameters
+    ----------
+    file : str
+        The name of the file.
+    format : str, optional
+        The format of the file.
+
     Returns
     -------
+    astropy.table.Table
+        Data read from the file. Array values are stored in table
+        columns, and scalar values in the table `meta` attribute.
+    
+    Raises
+    ------
+    ValueError
+        If `format` does not correspond to a recognized format.
 
-    table: astropy.table.Table
-        Table containing file data
+    Notes
+    -----
+    Valid formats are 'GSM', 'MESA', 'POLY' or 'auto' (autodetect).
+
     """
 
-    # If necessary, determine the filetype
+    # If necessary, determine the format
 
-    if filetype == 'auto':
+    if format == 'auto':
 
-        if h5.is_hdf5(filename):
+        if h5.is_hdf5(name):
 
-            with h5.File(filename, 'r') as file:
+            with h5.File(name, 'r') as file:
                 if 'M_star' in file.attrs:
-                    filetype = 'GSM'
+                    format = 'GSM'
                 elif 'n_poly' in file.attrs:
-                    filetype = 'POLY'
+                    format = 'POLY'
 
         else:
 
-            filetype = 'MESA'
+            format = 'MESA'
 
     # Create the table
 
-    if filetype == 'GSM':
-        tab = _read_model_gsm(filename)
-    elif filetype == 'MESA':
-        tab = _read_model_mesa(filename)
-    elif filetype == 'POLY':
-        tab = _read_model_poly(filename)
+    if format == 'GSM':
+        tab = _read_model_gsm(name)
+    elif format == 'MESA':
+        tab = _read_model_mesa(name)
+    elif format == 'POLY':
+        tab = _read_model_poly(name)
     else:
-        raise Exception("Invalid filetype '{:s}'".format(filetype))
+        raise ValueError("Invalid format '{:s}'".format(format))
 
     return tab
 
 ##
 
-def _read_model_gsm(filename):
+def _read_model_gsm(name):
 
     # Create the table
 
-    tab = _read_model_gsm(filename)
+    tab = _read_model_gsm(name)
 
     return tab
 
 ##
 
-def _read_model_mesa(filename):
+def _read_model_mesa(name):
 
     # Create the table
 
-    tab = _read_generic_txt(filename)
+    tab = _read_generic_txt(name)
 
     return tab
 
 ##
 
-def _read_model_poly(filename):
+def _read_model_poly(name):
 
     # Create the table
 
-    tab = _read_poly(filename)
+    tab = _read_poly(name)
 
     # Add in structure coefficients
 
@@ -242,11 +251,11 @@ def _read_model_poly(filename):
 
 ##
 
-def _read_poly(filename):
+def _read_poly(name):
 
     # Read data from the file
 
-    with h5.File(filename, 'r') as file:
+    with h5.File(name, 'r') as file:
 
         meta = dict(zip(file.attrs.keys(),file.attrs.values()))
 
@@ -343,11 +352,11 @@ def _read_poly(filename):
 
 ##
 
-def _read_generic_hdf(filename):
+def _read_generic_hdf(name):
 
     # Read data from the file
 
-    with h5.File(filename, 'r') as file:
+    with h5.File(name, 'r') as file:
 
         meta = dict(zip(file.attrs.keys(),file.attrs.values()))
 
@@ -364,11 +373,11 @@ def _read_generic_hdf(filename):
 
 ##
 
-def _read_generic_txt(filename):
+def _read_generic_txt(name):
 
     # Read data from the file
 
-    with open(filename, 'r') as file:
+    with open(name, 'r') as file:
 
         file.readline()
 
