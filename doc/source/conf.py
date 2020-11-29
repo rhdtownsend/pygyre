@@ -116,10 +116,10 @@ for rep_ext_key, rep_ext_val in rep_exts.items():
 email_automode = True
 
 # Intersphinx mappig
-intersphinx_mapping = {
-    'gyre': ('https://gyre.readthedocs.io/en/latest/', None),
-    'astropy': ('https://docs.astropy.org/en/stable/', None)
-    }
+#intersphinx_mapping = {
+#    'gyre': ('https://gyre.readthedocs.io/en/latest/', None),
+#    'astropy': ('https://docs.astropy.org/en/stable/', None)
+#    }
 
 # Remove module docstring from autodoc
 # def remove_module_docstring(app, what, name, obj, options, lines):
