@@ -122,10 +122,10 @@ intersphinx_mapping = {
     }
 
 # Remove module docstring from autodoc
-def remove_module_docstring(app, what, name, obj, options, lines):
-    if what == "module" and name == "pygyre":
-        del lines[:]
+# def remove_module_docstring(app, what, name, obj, options, lines):
+#     if what == "module" and name == "pygyre":
+#         del lines[:]
 
-def setup(app):
-    app.connect("autodoc-process-docstring", remove_module_docstring)
+# def setup(app):
+#     app.connect("autodoc-process-docstring", remove_module_docstring)
     
