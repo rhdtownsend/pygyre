@@ -3,6 +3,6 @@
 API Reference
 =============
 
-..
+.. automodule:: pygyre
    :members:
    :show-inheritance:

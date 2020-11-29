@@ -41,8 +41,8 @@ extensions = [
     'sphinx_rtd_theme',
     'sphinx.ext.mathjax',
     'sphinx.ext.extlinks',
-#    'sphinx.ext.intersphinx',
-#    'sphinx.ext.napoleon',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.napoleon',
     'sphinx-prompt',
     'sphinx_substitution_extensions',
 ]
@@ -116,16 +116,16 @@ for rep_ext_key, rep_ext_val in rep_exts.items():
 email_automode = True
 
 # Intersphinx mappig
-#intersphinx_mapping = {
-#    'gyre': ('https://gyre.readthedocs.io/en/latest/', None),
-#    'astropy': ('https://docs.astropy.org/en/stable/', None)
-#    }
+intersphinx_mapping = {
+   'gyre': ('https://gyre.readthedocs.io/en/latest/', None),
+   'astropy': ('https://docs.astropy.org/en/stable/', None)
+   }
 
 # Remove module docstring from autodoc
-# def remove_module_docstring(app, what, name, obj, options, lines):
-#     if what == "module" and name == "pygyre":
-#         del lines[:]
+def remove_module_docstring(app, what, name, obj, options, lines):
+    if what == "module" and name == "pygyre":
+        del lines[:]
 
-# def setup(app):
-#     app.connect("autodoc-process-docstring", remove_module_docstring)
+def setup(app):
+    app.connect("autodoc-process-docstring", remove_module_docstring)
     
