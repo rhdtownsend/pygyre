@@ -42,7 +42,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.extlinks',
 #    'sphinx.ext.intersphinx',
-    'sphinx.ext.napoleon',
+#    'sphinx.ext.napoleon',
     'sphinx-prompt',
     'sphinx_substitution_extensions',
 ]
