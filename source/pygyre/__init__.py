@@ -13,7 +13,7 @@ import h5py as h5
 import re
 import astropy.table as tb
 
-def read_output(name, format='auto'):
+def read_output(file, format='auto'):
 
     """
     Read GYRE output data from a file.
@@ -46,7 +46,7 @@ def read_output(name, format='auto'):
 
     if format == 'auto':
 
-        if h5.is_hdf5(name):
+        if h5.is_hdf5(file):
             format = 'HDF'
         else:
             format = 'TXT'
@@ -54,9 +54,9 @@ def read_output(name, format='auto'):
     # Create the table
 
     if format == 'HDF':
-        tab = _read_output_hdf(name)
+        tab = _read_output_hdf(file)
     elif format == 'TXT':
-        tab = _read_output_txt(name)
+        tab = _read_output_txt(file)
     else:
         raise ValueError("Invalid format '{:s}'".format(format))
 
@@ -64,11 +64,11 @@ def read_output(name, format='auto'):
 
 ##
 
-def _read_output_hdf(name):
+def _read_output_hdf(file):
 
     # Create the table
 
-    tab = _read_generic_hdf(name)
+    tab = _read_generic_hdf(file)
 
     # Convert complex columns and attributes
 
@@ -88,11 +88,11 @@ def _read_output_hdf(name):
 
 ##
 
-def _read_output_txt(name):
+def _read_output_txt(file):
 
     # Create the table
 
-    tab = _read_generic_txt(name)
+    tab = _read_generic_txt(file)
 
      # Merge real/imag columns
 
@@ -115,7 +115,7 @@ def _read_output_txt(name):
 
 ##
 
-def read_model(name, format='auto'):
+def read_model(file, format='auto'):
 
     """
     Read stellar model data from a file.
@@ -148,12 +148,12 @@ def read_model(name, format='auto'):
 
     if format == 'auto':
 
-        if h5.is_hdf5(name):
+        if h5.is_hdf5(file):
 
-            with h5.File(name, 'r') as file:
-                if 'M_star' in file.attrs:
+            with h5.File(file, 'r') as f:
+                if 'M_star' in f.attrs:
                     format = 'GSM'
-                elif 'n_poly' in file.attrs:
+                elif 'n_poly' in f.attrs:
                     format = 'POLY'
 
         else:
@@ -163,11 +163,11 @@ def read_model(name, format='auto'):
     # Create the table
 
     if format == 'GSM':
-        tab = _read_model_gsm(name)
+        tab = _read_model_gsm(file)
     elif format == 'MESA':
-        tab = _read_model_mesa(name)
+        tab = _read_model_mesa(file)
     elif format == 'POLY':
-        tab = _read_model_poly(name)
+        tab = _read_model_poly(file)
     else:
         raise ValueError("Invalid format '{:s}'".format(format))
 
@@ -175,31 +175,31 @@ def read_model(name, format='auto'):
 
 ##
 
-def _read_model_gsm(name):
+def _read_model_gsm(file):
 
     # Create the table
 
-    tab = _read_model_gsm(name)
+    tab = _read_model_gsm(file)
 
     return tab
 
 ##
 
-def _read_model_mesa(name):
+def _read_model_mesa(file):
 
     # Create the table
 
-    tab = _read_generic_txt(name)
+    tab = _read_generic_txt(file)
 
     return tab
 
 ##
 
-def _read_model_poly(name):
+def _read_model_poly(file):
 
     # Create the table
 
-    tab = _read_poly(name)
+    tab = _read_poly(file)
 
     # Add in structure coefficients
 
@@ -251,18 +251,18 @@ def _read_model_poly(name):
 
 ##
 
-def _read_poly(name):
+def _read_poly(file):
 
     # Read data from the file
 
-    with h5.File(name, 'r') as file:
+    with h5.File(file, 'r') as f:
 
-        meta = dict(zip(file.attrs.keys(),file.attrs.values()))
+        meta = dict(zip(f.attrs.keys(),f.attrs.values()))
 
         cols = {}
     
-        for key in file.keys():
-            cols[key] = file[key][...]
+        for key in f.keys():
+            cols[key] = f[key][...]
 
     # Evaluate auxillary data
 
@@ -352,18 +352,18 @@ def _read_poly(name):
 
 ##
 
-def _read_generic_hdf(name):
+def _read_generic_hdf(file):
 
     # Read data from the file
 
-    with h5.File(name, 'r') as file:
+    with h5.File(file, 'r') as f:
 
-        meta = dict(zip(file.attrs.keys(),file.attrs.values()))
+        meta = dict(zip(f.attrs.keys(),f.attrs.values()))
 
         cols = {}
     
-        for key in file.keys():
-            cols[key] = file[key][...]
+        for key in f.keys():
+            cols[key] = f[key][...]
 
     # Create the table
 
@@ -373,31 +373,29 @@ def _read_generic_hdf(name):
 
 ##
 
-def _read_generic_txt(name):
+def _read_generic_txt(file):
 
     # Read data from the file
 
-    with open(name, 'r') as file:
+    with open(file, 'r') as f:
 
-        file.readline()
+        f.readline()
 
-        meta_keys = file.readline().split()
-        meta_vals = [_interpret(val) for val in file.readline().split()]
+        meta_keys = f.readline().split()
+        meta_vals = [_interpret(val) for val in f.readline().split()]
 
         meta = dict(zip(meta_keys, meta_vals))
 
-        file.readline()
-        file.readline()
+        f.readline()
+        f.readline()
 
-        col_keys = file.readline().split()
+        col_keys = f.readline().split()
         col_vals = []
     
         while True :
-            line = file.readline()
+            line = f.readline()
             if not line : break
             col_vals.append([_interpret(val) for val in line.split()])
-
-        file.close()
 
     cols = {}
 

@@ -79,9 +79,5 @@ you're in the working directory for the GYRE :ref:`example walkthrough
 
    # Print the table metadata and contents
 
-   m.meta
-   m
-
-
-
-
+   print(m.meta)
+   print(m)
