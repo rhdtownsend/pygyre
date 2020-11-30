@@ -13,7 +13,7 @@ The PyGYRE Python Package
    :target: https://github.com/rhdtownsend/pygyre/issues
 .. image:: https://img.shields.io/readthedocs/pygyre
    :alt: Read the Docs
-   :target: https://pygyre.readthedocs.io/en/latest
+   :target: https://pygyre.readthedocs.io/en/stable
 
 Overview
 ========
