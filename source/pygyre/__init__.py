@@ -179,7 +179,7 @@ def _read_model_gsm(file):
 
     # Create the table
 
-    tab = _read_model_gsm(file)
+    tab = _read_generic_hdf(file)
 
     return tab
 
