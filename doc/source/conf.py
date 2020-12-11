@@ -23,8 +23,8 @@ import sphinx_rtd_theme
 
 project = 'PyGYRE'
 author = 'Rich Townsend & The PyGYRE Team'
-version = "v1.1.1"
-release = "v1.1.1"
+version = "1.1.2"
+release = "1.1.2"
 branch = "main"
 copyright = '2020, Rich Townsend & The PyGYRE Team'
 
@@ -99,7 +99,7 @@ extlinks = {
 
 # Set site-wide targets
 targets = {
-    'github-tarball': 'https:///github.com/rhdtownsend/pygyre/archive/{0:s}.tar.gz'.format(release),
+    'github-tarball': 'https://codeload.github.com/rhdtownsend/pygyre/tar.gz/v{0:s}'.format(release),
 }
 
 rst_prolog = '\n'.join(['.. _{:s}: {:s}'.format(x, targets[x]) for x in targets])
