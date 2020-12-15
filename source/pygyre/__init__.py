@@ -187,11 +187,120 @@ def _read_model_gsm(file):
 
 def _read_model_mesa(file):
 
+    # Read data from the file
+
+    with open(file, 'r') as f:
+
+        meta_vals = [_interpret(val) for val in f.readline().split()]
+
+        if len(meta_vals) == 4:
+            meta_vals += [1]
+
+        if len(meta_vals) == 5:
+            meta_keys = ['n', 'M_star', 'R_star', 'L_star', 'version']
+        else:
+            raise ValueError("Invalid header line in file '{:s}'".format(file))
+
+        meta = dict(zip(meta_keys, meta_vals))
+
+        if meta['version'] == 1:
+            col_keys = ['k',
+                        'r',
+                        'M_r/(M-M_r)',
+                        'L_r',
+                        'P',
+                        'T',
+                        'rho',
+                        'nabla',
+                        'N^2',
+                        'c_V',
+                        'c_P',
+                        'chi_T',
+                        'chi_rho',
+                        'kap',
+                        'kap_T',
+                        'kap_rho',
+                        'eps',
+                        'eps_nuc*eps_T',
+                        'eps_nuc*eps_rho']
+        elif meta['version'] == 19:
+            col_keys = ['k',
+                        'r',
+                        'M_r/(M-M_r)',
+                        'L_r',
+                        'P',
+                        'T',
+                        'rho',
+                        'nabla',
+                        'N^2',
+                        'Gamma_1',
+                        'nabla_ad',
+                        'delta',
+                        'kap',
+                        'kap_T',
+                        'kap_rho',
+                        'eps',
+                        'eps_nuc*eps_T',
+                        'eps_nuc*eps_rho',
+                        'Omega_rot']
+        elif meta['version'] == 100:
+            col_keys = ['k',
+                        'r',
+                        'M_r/(M-M_r)',
+                        'L_r',
+                        'P',
+                        'T',
+                        'rho',
+                        'nabla',
+                        'N^2',
+                        'Gamma_1',
+                        'nabla_ad',
+                        'delta',
+                        'kap',
+                        'kap kap_T',
+                        'kap kap_rho',
+                        'eps',
+                        'eps_nuc*eps_T',
+                        'eps_nuc*eps_rho',
+                        'Omega_rot']
+        elif meta['version'] == 110:
+            col_keys = ['k',
+                        'r',
+                        'M_r/(M-M_r)',
+                        'L_r',
+                        'P',
+                        'T',
+                        'rho',
+                        'nabla',
+                        'N^2',
+                        'Gamma_1',
+                        'nabla_ad',
+                        'delta',
+                        'kap',
+                        'kap kap_T',
+                        'kap kap_rho',
+                        'eps_nuc',
+                        'eps_nuc*eps_T',
+                        'eps_nuc*eps_rho',
+                        'Omega_rot']
+        else:
+            raise ValueError("Invalid header line in file '{:s}': {:d}".format(file, meta['version']))
+        
+        col_vals = []
+    
+        while True :
+            line = f.readline()
+            if not line : break
+            col_vals.append([_interpret(val) for val in line.split()])
+
+    cols = {}
+
+    for i in range(0,len(col_keys)):
+        cols[col_keys[i]] = np.array([col_vals[i] for col_vals in col_vals])
+
     # Create the table
 
-    tab = _read_generic_txt(file)
-
-    return tab
+    return tb.Table(cols, meta=meta)
 
 ##
 
