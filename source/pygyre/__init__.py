@@ -263,7 +263,7 @@ def _read_model_mesa(file):
                         'eps_nuc*eps_T',
                         'eps_nuc*eps_rho',
                         'Omega_rot']
-        elif meta['version'] == 110:
+        elif meta['version'] == 101:
             col_keys = ['k',
                         'r',
                         'M_r/(M-M_r)',
