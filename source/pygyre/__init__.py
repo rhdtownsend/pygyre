@@ -246,7 +246,7 @@ def _read_model_mesa(file):
         elif meta['version'] == 100:
             col_keys = ['k',
                         'r',
-                        'M_r/(M-M_r)',
+                        'M_r',
                         'L_r',
                         'P',
                         'T',
@@ -266,7 +266,7 @@ def _read_model_mesa(file):
         elif meta['version'] == 101:
             col_keys = ['k',
                         'r',
-                        'M_r/(M-M_r)',
+                        'M_r',
                         'L_r',
                         'P',
                         'T',

@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pygyre",
-    version="1.1.4",
+    version="1.1.5",
     author="Rich Townsend",
     author_email="townsend@astro.wisc.edu",
     description="Python support for the GYRE stellar oscillation code",
