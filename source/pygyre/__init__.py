@@ -568,7 +568,8 @@ def write_model(filename, model_table):
     filename : str
         The name of the file to write to
     model_table : astropy.table.Table
-        model data as would be produced from `read_model()`
+        model data as would be produced from calling `read_model()`
+        on a MESA file
 
     Raises
     ------
