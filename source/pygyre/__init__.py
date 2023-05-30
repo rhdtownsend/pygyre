@@ -580,35 +580,34 @@ def write_model(filename, model_table):
     # check for invalid input
     meta_keys = ['n', 'M_star', 'R_star', 'L_star', 'version']
     col_keys = ['k',
-                        'r',
-                        'M_r',
-                        'L_r',
-                        'P',
-                        'T',
-                        'rho',
-                        'nabla',
-                        'N^2',
-                        'Gamma_1',
-                        'nabla_ad',
-                        'delta',
-                        'kap',
-                        'kap kap_T',
-                        'kap kap_rho',
-                        'eps_nuc',
-                        'eps_nuc*eps_T',
-                        'eps_nuc*eps_rho',
-                        'eps_grav',
-                        'Omega_rot']
+                'r',
+                'M_r',
+                'L_r',
+                'P',
+                'T',
+                'rho',
+                'nabla',
+                'N^2',
+                'Gamma_1',
+                'nabla_ad',
+                'delta',
+                'kap',
+                'kap kap_T',
+                'kap kap_rho',
+                'eps_nuc',
+                'eps_nuc*eps_T',
+                'eps_nuc*eps_rho',
+                'eps_grav',
+                'Omega_rot']
     
-    if list(model_table.meta.keys()) != meta_keys or \
-    list(model_table.colnames) != col_keys:
+    if ( list(model_table.meta.keys()) != meta_keys or
+         list(model_table.colnames) != col_keys ):
         raise ValueError("Invalid table input: meta data or column data is either missing or mislabeled")
     elif model_table.meta['n'] != len(model_table):
-        raise ValueError(("Invalid table input: Expected {:d} columns from meta data, " \
+        raise ValueError(("Invalid table input: Expected {:d} columns from meta data, "
                          "table actually has {:d} columns").format(model_table.meta['n'], len(model_table)))
     
     # open the file to write in
-    # I bet this could be done more elagantly, but this works for now
     with open(filename, 'w') as f:
         # Write the meta data in the top line
         meta_data = '{:d} {:.16E} {:.16E} {:.16E} {:d}\n'.format(*model_table.meta.values())
