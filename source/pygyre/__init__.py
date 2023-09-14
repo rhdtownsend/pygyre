@@ -260,8 +260,8 @@ def _read_model_mesa(file):
                         'kap kap_T',
                         'kap kap_rho',
                         'eps',
-                        'eps_nuc*eps_T',
-                        'eps_nuc*eps_rho',
+                        'eps_nuc eps_T',
+                        'eps_nuc eps_rho',
                         'Omega_rot']
         elif meta['version'] == 101:
             col_keys = ['k',
@@ -280,8 +280,29 @@ def _read_model_mesa(file):
                         'kap kap_T',
                         'kap kap_rho',
                         'eps_nuc',
-                        'eps_nuc*eps_T',
-                        'eps_nuc*eps_rho',
+                        'eps_nuc eps_T',
+                        'eps_nuc eps_rho',
+                        'Omega_rot']
+        elif meta['version'] == 120:
+            col_keys = ['k',
+                        'r',
+                        'M_r',
+                        'L_r',
+                        'P',
+                        'T',
+                        'rho',
+                        'nabla',
+                        'N^2',
+                        'Gamma_1',
+                        'nabla_ad',
+                        'delta',
+                        'kap',
+                        'kap kap_T',
+                        'kap kap_rho',
+                        'eps_nuc',
+                        'eps_nuc eps_T',
+                        'eps_nuc eps_rho',
+                        'eps_grav',
                         'Omega_rot']
         else:
             raise ValueError("Invalid header line in file '{:s}': {:d}".format(file, meta['version']))
