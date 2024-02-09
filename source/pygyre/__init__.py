@@ -578,3 +578,68 @@ def _interpret(s):
         except ValueError:
 
             return s
+            
+def write_model(filename, model_table):
+    """ 
+
+    Creates a stellar model file in the MESA v1.20 format 
+    from an astropy table that can be read by GYRE as input
+
+    Parameters
+    ----------
+    filename : str
+        The name of the file to write to
+    model_table : astropy.table.Table
+        model data as would be produced from calling `read_model()`
+        on a MESA file
+
+    Raises
+    ------
+    ValueError
+        If `model_table` does not match expected format
+
+    """
+    # check for invalid input
+    meta_keys = ['n', 'M_star', 'R_star', 'L_star', 'version']
+    col_keys = ['k',
+                'r',
+                'M_r',
+                'L_r',
+                'P',
+                'T',
+                'rho',
+                'nabla',
+                'N^2',
+                'Gamma_1',
+                'nabla_ad',
+                'delta',
+                'kap',
+                'kap kap_T',
+                'kap kap_rho',
+                'eps_nuc',
+                'eps_nuc*eps_T',
+                'eps_nuc*eps_rho',
+                'eps_grav',
+                'Omega_rot']
+    
+    if ( list(model_table.meta.keys()) != meta_keys or
+         list(model_table.colnames) != col_keys ):
+        raise ValueError("Invalid table input: meta data or column data is either missing or mislabeled")
+    elif model_table.meta['n'] != len(model_table):
+        raise ValueError(("Invalid table input: Expected {:d} columns from meta data, "
+                         "table actually has {:d} columns").format(model_table.meta['n'], len(model_table)))
+    
+    # open the file to write in
+    with open(filename, 'w') as f:
+        # Write the meta data in the top line
+        meta_data = '{:d} {:.16E} {:.16E} {:.16E} {:d}\n'.format(*model_table.meta.values())
+        f.write(meta_data)
+
+        # Now write the point data
+        row_str_format = '{:d}'
+        for i in range(1, len(model_table[0])): row_str_format += ' {:.16E}'
+        row_str_format += '\n'
+        for row in range(len(model_table)):
+            row_data = row_str_format.format(*model_table[row].as_void())
+            f.write(row_data)
+            
