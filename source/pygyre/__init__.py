@@ -514,7 +514,7 @@ def _read_generic_hdf(file):
         cols = {}
     
         for key in f.keys():
-            if isinstance(f.get(key, getclass=True), h5.Dataset):
+            if issubclass(f.get(key, getclass=True), h5.Dataset):
                 cols[key] = f[key][...]
 
     # Create the table
