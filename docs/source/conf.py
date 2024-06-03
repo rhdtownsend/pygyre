@@ -14,17 +14,19 @@ import os
 import sys
 import re
 
-sys.path.insert(0, os.path.abspath('../../source'))
+sys.path.insert(0, os.path.abspath('../../src'))
+sys.path.insert(0, os.path.abspath('../../src/pygyre'))
 
 import sphinx_rtd_theme
+from _version import __version__
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'PyGYRE'
 author = 'Rich Townsend & The PyGYRE Team'
-version = "1.1.5"
-release = "1.1.5"
+version = __version__
+release = version
 branch = "main"
 copyright = '2020, Rich Townsend & The PyGYRE Team'
 
@@ -120,6 +122,7 @@ intersphinx_mapping = {
    'gyre': ('https://gyre.readthedocs.io/en/latest/', None),
    'astropy': ('https://docs.astropy.org/en/stable/', None)
    }
+intersphinx_disabled_reftypes = ["std:doc"]
 
 # Remove module docstring from autodoc
 def remove_module_docstring(app, what, name, obj, options, lines):
