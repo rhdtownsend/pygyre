@@ -28,7 +28,7 @@ author = 'Rich Townsend & The PyGYRE Team'
 version = __version__
 release = version
 branch = "main"
-copyright = '2020, Rich Townsend & The PyGYRE Team'
+copyright = '2024, Rich Townsend & The PyGYRE Team'
 
 
 # -- General configuration ---------------------------------------------------
@@ -123,6 +123,11 @@ intersphinx_mapping = {
    'astropy': ('https://docs.astropy.org/en/stable/', None)
    }
 intersphinx_disabled_reftypes = ["std:doc"]
+
+# Set up autodoc
+autoclass_content = 'class'
+autodoc_member_order = 'bysource'
+autodoc_mock_imports = ['numpy', 'h5py', 'astropy']
 
 # Remove module docstring from autodoc
 def remove_module_docstring(app, what, name, obj, options, lines):
