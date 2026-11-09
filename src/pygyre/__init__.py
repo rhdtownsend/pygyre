@@ -58,7 +58,7 @@ def read_output(file, format='auto'):
     elif format == 'TXT':
         tab = _read_output_txt(file)
     else:
-        raise ValueError("Invalid format '{:s}'".format(format))
+        raise ValueError(f"Invalid format '{format}'")
 
     return tab
 
@@ -104,8 +104,8 @@ def _read_output_txt(file):
 
             colname = mo.group(1)
 
-            colname_re = 'Re({:s})'.format(colname)
-            colname_im = 'Im({:s})'.format(colname)
+            colname_re = f'Re({colname})'
+            colname_im = f'Im({colname})'
             
             tab[colname] = tab[colname_re] + 1j*tab[colname_im]
 
@@ -169,7 +169,7 @@ def read_model(file, format='auto'):
     elif format == 'POLY':
         tab = _read_model_poly(file)
     else:
-        raise ValueError("Invalid format '{:s}'".format(format))
+        raise ValueError(f"Invalid format '{format}'")
 
     return tab
 
@@ -199,7 +199,7 @@ def _read_model_mesa(file):
         if len(meta_vals) == 5:
             meta_keys = ['n', 'M_star', 'R_star', 'L_star', 'version']
         else:
-            raise ValueError("Invalid header line in file '{:s}'".format(file))
+            raise ValueError(f"Invalid header line in file '{file}'")
 
         meta = dict(zip(meta_keys, meta_vals))
 
@@ -326,7 +326,7 @@ def _read_model_mesa(file):
                         'eps_grav',
                         'Omega_rot']
         else:
-            raise ValueError("Invalid header line in file '{:s}': {:d}".format(file, meta['version']))
+            raise ValueError(f"Invalid header line in file '{file}': {meta['version']}")
         
         col_vals = []
     
@@ -364,7 +364,15 @@ def _read_model_poly(file):
 
     z_s = tab.meta['z_s']
     mu_s = tab.meta['mu_s']
-    Gamma_1 = tab.meta['Gamma_1']
+
+    if tab.meta['version'] == 0:
+        Gamma_1 = np.full(len(z), tab.meta['Gamma_1'])
+        Gamma_A = Gamma_1
+    elif tab.meta['version'] == 100:
+        Gamma_1 = tab['Gamma_1']
+        Gamma_A = tab['Gamma_A']
+    else:
+        raise ValueError(f"Invalid version {version} in file '{file}'")
 
     tab['x'] = z/z_s
 
@@ -375,17 +383,17 @@ def _read_model_poly(file):
             if z_ != 0:
                 if theta_ != 0:
                     V_2[...] =  -(n_poly_ + 1.)*z_s**2*dtheta_/(theta_*z_)
-                    As[...] = V_2*(z_/z_s)**2*(n_poly_/(n_poly_+1.) - 1./Gamma_1)
+                    As[...] = V_2*(z_/z_s)**2*(n_poly_/(n_poly_+1) - 1/Gamma_A)
                 else:
                     V_2[...] = np.Inf
                     As[...] = np.Inf
                 U[...] = z_**3*t_*theta_**n_poly_/mu_
                 c_1[...] = (z_/z_s)**3/(mu_/mu_s)
             else:
-                V_2[...] = (n_poly_ + 1.)*z_s**2/3.
-                As[...] = 0.
-                U[...] = 3.
-                c_1[...] = 3.*mu_s/z_s**3
+                V_2[...] = (n_poly_ + 1)*z_s**2/3
+                As[...] = 0
+                U[...] = 3
+                c_1[...] = 3*mu_s/z_s**3
 
         tab['V_2'] = it.operands[-4]
         tab['As'] = it.operands[-3]
@@ -395,7 +403,7 @@ def _read_model_poly(file):
     # Add in physical data
 
     tab['rho/rho_0'] = t*theta**n_poly
-    tab['P/P_0'] = (n_poly[0]+1.)/(n_poly+1.)*t**2/B*theta**(n_poly+1.)
+    tab['P/P_0'] = (n_poly[0]+1)/(n_poly+1.)*t**2/B*theta**(n_poly+1)
     tab['M_r/M'] = mu/mu_s
 
     return tab
@@ -626,8 +634,8 @@ def write_model(filename, model_table):
          list(model_table.colnames) != col_keys ):
         raise ValueError("Invalid table input: meta data or column data is either missing or mislabeled")
     elif model_table.meta['n'] != len(model_table):
-        raise ValueError(("Invalid table input: Expected {:d} columns from meta data, "
-                         "table actually has {:d} columns").format(model_table.meta['n'], len(model_table)))
+        raise ValueError(f"Invalid table input: Expected {model_table.meta['n']} columns from meta data, "
+                         f"table actually has {len(model_table)} columns")
     
     # open the file to write in
     with open(filename, 'w') as f:
