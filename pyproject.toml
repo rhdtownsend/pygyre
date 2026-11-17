@@ -10,9 +10,9 @@ authors = [
 ]
 description = "Python support for the GYRE stellar oscillation code"
 readme = "README.rst"
-requires-python = ">=3.7"
+requires-python = ">=3.9"
 dependencies = [
-    "numpy>=1.15.0",
+    "numpy>=1.21",
     "astropy>=5.3.2",
     "h5py>=3.9.0"
 ]
