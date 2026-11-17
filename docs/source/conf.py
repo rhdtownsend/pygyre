@@ -46,13 +46,16 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon',
     'sphinxcontrib.spelling',
-    'sphinx-prompt',
+    'sphinx_copybutton',
     'sphinx_substitution_extensions',
 ]
 
 # Spelling
 spelling_word_list_filename='spelling_wordlist.txt'
 spelling_filters=['sphinxcontrib.spelling.filters.ContractionFilter']
+
+# Copy button (don't copy line numbers, prompts or output)
+copybutton_exclude = '.linenos, .gp, .go'
 
 
 # Add any paths that contain templates here, relative to this directory.

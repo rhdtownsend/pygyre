@@ -27,16 +27,16 @@ Installing from PyPI
 To install PyGYRE from the `Python Package Index (PyPI)
 <https://pypi.org/>`__, use the :command:`pip` command:
 
-.. prompt:: bash
+.. code-block:: console
 
-   pip install pygyre
+   $ pip install pygyre
 
 If PyGYRE is already installed, you can upgrade to a more-recent
 version via
 
-.. prompt:: bash
+.. code-block:: console
 
-   pip install --upgrade pygyre
+   $ pip install --upgrade pygyre
 
 Installing from Source
 ======================
