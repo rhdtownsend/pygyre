@@ -13,6 +13,8 @@ import h5py as h5
 import re
 import astropy.table as tb
 
+from ._version import __version__
+
 def read_output(file, format='auto'):
 
     """
