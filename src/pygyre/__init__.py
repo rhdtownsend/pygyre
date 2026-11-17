@@ -418,6 +418,11 @@ def _read_poly(file):
 
         meta = dict(zip(f.attrs.keys(),f.attrs.values()))
 
+        # Files written before POLY versioning was introduced have no
+        # version attribute; treat them as version 0 (as GYRE does)
+
+        meta.setdefault('version', 0)
+
         cols = {}
     
         for key in f.keys():
