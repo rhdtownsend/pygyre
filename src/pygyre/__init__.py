@@ -376,14 +376,14 @@ def _read_model_poly(file):
 
     tab['x'] = z/z_s
 
-    with np.nditer([z, theta, dtheta, n_poly, t, mu, None, None, None, None]) as it:
+    with np.nditer([z, theta, dtheta, n_poly, t, mu, Gamma_A, None, None, None, None]) as it:
 
-        for z_, theta_, dtheta_, n_poly_, t_, mu_, V_2, As, U, c_1, in it:
+        for z_, theta_, dtheta_, n_poly_, t_, mu_, Gamma_A_, V_2, As, U, c_1, in it:
 
             if z_ != 0:
                 if theta_ != 0:
                     V_2[...] =  -(n_poly_ + 1.)*z_s**2*dtheta_/(theta_*z_)
-                    As[...] = V_2*(z_/z_s)**2*(n_poly_/(n_poly_+1) - 1/Gamma_A)
+                    As[...] = V_2*(z_/z_s)**2*(n_poly_/(n_poly_+1) - 1/Gamma_A_)
                 else:
                     V_2[...] = np.Inf
                     As[...] = np.Inf
