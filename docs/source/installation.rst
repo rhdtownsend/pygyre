@@ -10,11 +10,12 @@ on your system.
 Pre-requisites
 ==============
 
-PyGYRE requires that the following Python packages are already present:
+PyGYRE requires Python 3.9 or later, together with the following
+Python packages:
 
-* `numpy <https://numpy.org/>`__
-* `H5py <https://www.h5py.org/>`__
-* `Astropy <https://www.astropy.org/>`__
+* `numpy <https://numpy.org/>`__ (version 1.21 or later; NumPy 2 is supported)
+* `H5py <https://www.h5py.org/>`__ (version 3.9 or later)
+* `Astropy <https://www.astropy.org/>`__ (version 5.3.2 or later)
 
 If you opt to install from PyPI (below), then these pre-requisites
 should be taken care of automatically.
@@ -44,23 +45,16 @@ To install PyGYRE from source, download the `source code
 <github-tarball_>`__ and unpack it from the command line using the
 :command:`tar` utility:
 
-.. prompt:: bash
+.. code-block:: console
    :substitutions:
 
-   tar xf pygyre-|release|.tar.gz
+   $ tar xf pygyre-|release|.tar.gz
 
-Then, change into the :file:`source` subdirectory of the newly created
-directory and run the :command:`setup.py:` script:
+Then, change into the newly created directory and install the package
+with :command:`pip`:
 
-.. prompt:: bash
+.. code-block:: console
    :substitutions:
 
-   cd pygyre-|release|/source
-   python setup.py install
-   
-
-
-	 
-
-
-
+   $ cd pygyre-|release|
+   $ pip install .

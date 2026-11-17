@@ -28,7 +28,7 @@ author = 'Rich Townsend & The PyGYRE Team'
 version = __version__
 release = version
 branch = "main"
-copyright = '2024, Rich Townsend & The PyGYRE Team'
+copyright = '2024-2026, Rich Townsend & The PyGYRE Team'
 
 
 # -- General configuration ---------------------------------------------------
