@@ -45,9 +45,14 @@ extensions = [
     'sphinx.ext.extlinks',
     'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon',
+    'sphinxcontrib.spelling',
     'sphinx-prompt',
     'sphinx_substitution_extensions',
 ]
+
+# Spelling
+spelling_word_list_filename='spelling_wordlist.txt'
+spelling_filters=['sphinxcontrib.spelling.filters.ContractionFilter']
 
 
 # Add any paths that contain templates here, relative to this directory.
@@ -136,4 +141,4 @@ def remove_module_docstring(app, what, name, obj, options, lines):
 
 def setup(app):
     app.connect("autodoc-process-docstring", remove_module_docstring)
-    
+

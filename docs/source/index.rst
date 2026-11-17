@@ -12,5 +12,5 @@ or produced by the :git:`GYRE stellar oscillation code
    installation.rst
    example-walkthrough.rst
    api-ref.rst
-   
-   
+
+
