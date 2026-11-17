@@ -385,8 +385,8 @@ def _read_model_poly(file):
                     V_2[...] =  -(n_poly_ + 1.)*z_s**2*dtheta_/(theta_*z_)
                     As[...] = V_2*(z_/z_s)**2*(n_poly_/(n_poly_+1) - 1/Gamma_A_)
                 else:
-                    V_2[...] = np.Inf
-                    As[...] = np.Inf
+                    V_2[...] = np.inf
+                    As[...] = np.inf
                 U[...] = z_**3*t_*theta_**n_poly_/mu_
                 c_1[...] = (z_/z_s)**3/(mu_/mu_s)
             else:
